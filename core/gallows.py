@@ -6,10 +6,11 @@ from core.pictures import GALLOWS_BY_ATTEMPTS
 class Gallows:
     def __init__(self):
         self.word = self._get_word()
+        self.word_coding = ["_"] * len(self.word)
         self.attempts = 6
-        print(self.word)
+        self.unsuccess_letters = []
         self.greeting()
-        self.ask_for_word()
+        self.play()
 
     def _get_word(self):
         words_file_path = Config.WORDS_FILE_PATH
@@ -23,24 +24,41 @@ class Gallows:
         print("Отгадай его")
         print("Слово:", "_" * len(self.word))
 
-    def ask_for_word(self):
+    def play(self):
         letter = input("Угадай букву которая есть в слове:")
-        if letter.lower() in self.word:
-            print("Ты угадал!")
+        if letter.lower().strip() and letter.lower() in self.word:
+            self.succcess(letter)
         else:
-            print("Ты ошибся!")
-            self.attempts -= 1
-            try:
-                self.draw_gallows()
-                self.ask_for_word()
-            except KeyError:
-                print('К сожалению ты проиграл!')
-                print('Игра закончена!')
-                
+            self.unsuccess(letter)
+
+    def succcess(self, letter):
+        print("Ты угадал!")
+        for i, char in enumerate(self.word, start=0):
+            if char == letter.lower():
+                self.word_coding[i] = char
+        print("".join(self.word_coding))
+        if self.word_coding.count("_") == 0:
+            self.congratulate()
+            return
+        self.play()
+
+    def unsuccess(self, letter):
+        self.unsuccess_letters.append(letter.lower())
+        print("Ты ошибся!")
+        print(f"неправильные буквы: {", ".join(self.unsuccess_letters)}")
+        print("".join(self.word_coding))
+        self.attempts -= 1
+        try:
+            self.draw_gallows()
+            self.play()
+        except KeyError:
+            print("К сожалению ты проиграл!")
+            print(f"Я загадал слово: {self.word}")
+            print("Игра закончена!")
+
 
     def draw_gallows(self):
         print(GALLOWS_BY_ATTEMPTS[self.attempts])
 
-    @property
-    def get_word(self):
-        return self.word
+    def congratulate(self):
+        print("Поздравляю! Вы выиграли!")
