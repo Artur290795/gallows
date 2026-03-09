@@ -1,3 +1,8 @@
+"""ASCII-графика для игры "Виселица".
+
+Содержит изображения виселицы для каждого этапа игры.
+"""
+
 GALLOWS_STAGES = {
     6: """
     _______
@@ -57,13 +62,12 @@ GALLOWS_STAGES = {
     """,
 }
 
-# Для удобства можно добавить и обратный порядок
 GALLOWS_BY_ATTEMPTS = {
-    6: GALLOWS_STAGES[6],  # 6 попыток осталось - пустая виселица
+    6: GALLOWS_STAGES[6],
     5: GALLOWS_STAGES[5],
     4: GALLOWS_STAGES[4],
     3: GALLOWS_STAGES[3],
     2: GALLOWS_STAGES[2],
     1: GALLOWS_STAGES[1],
-    0: GALLOWS_STAGES[0],  # 0 попыток - полная виселица
+    0: GALLOWS_STAGES[0],
 }

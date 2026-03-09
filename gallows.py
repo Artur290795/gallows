@@ -1,3 +1,6 @@
+"""
+Модуль с классом Gallows - основным классом приложения
+"""
 import unicodedata
 from random import choice
 from config import Config
@@ -5,15 +8,26 @@ from pictures import GALLOWS_BY_ATTEMPTS
 
 
 class Gallows:
+    """Основной класс игры "Виселица"
+    
+    Управляет игровым процессом: загадывает слово, принимает буквы,
+    отслеживает прогресс и отображает состояние игры.
+    
+    Attributes:
+        word (str): Загаданное слово
+        word_coding (list[str]): Текущее состояние отгаданного слова (буквы и "_")
+        attempts (int): Оставшееся количество попыток
+        unsuccess_letters (list[str]): Список неверно угаданных букв
+    """
     def __init__(self):
         self.word = self._get_word()
         self.word_coding = ["_"] * len(self.word)
-        self.attempts = 6
+        self.attempts = Config.MAX_ATTEMPTS
         self.unsuccess_letters = []
         self._greeting()
         self.play()
 
-    def _greeting(self):
+    def _greeting(self) -> None:
         print("-----------------------------", end="\n\n")
         print("Отлично, давай поиграем в Виселицу!", end="\n\n")
         print(
@@ -30,19 +44,19 @@ class Gallows:
         print("Слово:", "_" * len(self.word), end="\n\n")
         print("-----------------------------")
 
-    def play(self):
+    def play(self) -> None:
         self._print_info()
         letter = input("Угадай букву которая есть в слове:")
         if self._is_valid_letter(letter):
             if letter.lower().strip() and letter.lower() in self.word:
-                self.succcess(letter)
+                self.success(letter)
             else:
                 self.unsuccess(letter)
         else:
             print("Ты ввел не валидный символ(ы), попробуй еще раз!", end="\n\n")
             self.play()
 
-    def succcess(self, letter: str):
+    def success(self, letter: str) -> None:
         print("Ты угадал!", end="\n\n")
         for i, char in enumerate(self.word, start=0):
             if char == letter.lower():
@@ -53,7 +67,7 @@ class Gallows:
             return
         self.play()
 
-    def unsuccess(self, letter: str):
+    def unsuccess(self, letter: str) -> None:
         self.unsuccess_letters.append(letter.lower())
         print("Ты ошибся!", end="\n\n")
         self.attempts -= 1
@@ -65,22 +79,22 @@ class Gallows:
             print(f"Я загадал слово: {self.word}")
             print("Игра закончена!")
 
-    def _draw_gallows(self):
+    def _draw_gallows(self) -> None:
         print(GALLOWS_BY_ATTEMPTS[self.attempts], end="\n\n")
 
-    def _congratulate(self):
+    def _congratulate(self) -> None:
         print("Поздравляю! Ты выиграл!", end="\n\n")
 
-    def _is_valid_letter(self, value: str):
+    def _is_valid_letter(self, value: str) -> bool:
         return len(value) == 1 and "CYRILLIC" in unicodedata.name(value)
 
-    def _get_word(self):
+    def _get_word(self) -> str:
         words_file_path = Config.WORDS_FILE_PATH
         with open(words_file_path, "r", encoding="utf-8") as file:
             words = [word.strip() for word in file.readlines()]
         return choice(words)
 
-    def _print_info(self):
+    def _print_info(self) -> None:
         if self.unsuccess_letters:
             print(
                 f"Неправильные буквы: {', '.join(self.unsuccess_letters)}", end="\n\n"
