@@ -1,4 +1,3 @@
-
 GALLOWS_STAGES = {
     6: """
     _______
@@ -55,7 +54,7 @@ GALLOWS_STAGES = {
     |    /|\\
     |    / \\
     |
-    """
+    """,
 }
 
 # Для удобства можно добавить и обратный порядок
@@ -68,15 +67,3 @@ GALLOWS_BY_ATTEMPTS = {
     1: GALLOWS_STAGES[1],
     0: GALLOWS_STAGES[0],  # 0 попыток - полная виселица
 }
-
-def get_gallows(attempts_left):
-    """
-    Возвращает рисунок виселицы по количеству оставшихся попыток
-    attempts_left: от 0 до 6
-    """
-    return GALLOWS_BY_ATTEMPTS.get(attempts_left, GALLOWS_BY_ATTEMPTS[6])
-
-def print_gallows(attempts_left):
-    """Печатает виселицу"""
-    print(get_gallows(attempts_left))
-
