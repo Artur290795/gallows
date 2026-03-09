@@ -16,7 +16,7 @@ def main():
     response = input()
     while response.lower() == "yes":
         app = Gallows()
-        print("Ты хочешь сыграть еще раз?(Введи yes если хочешь")
+        print("Ты хочешь сыграть еще раз?(Введи yes если хочешь)")
         response = input()
 
     print("Всего хорошего! Если захочешь поиграть, просто запусти приложение снова")
