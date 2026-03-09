@@ -20,5 +20,5 @@
 
 1. Клонируй репозиторий:
 ```bash
-git clone https://github.com/yourusername/gallows.git
+git clone https://github.com/Artur290795/gallows.git
 cd gallows
