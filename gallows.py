@@ -5,7 +5,7 @@
 import unicodedata
 from random import choice
 from config import Config
-from pictures import GALLOWS_BY_ATTEMPTS
+from pictures import GALLOWS_STAGES
 
 
 class Gallows:
@@ -25,7 +25,9 @@ class Gallows:
         self.word = self._get_word()
         self.word_state = ["_"] * len(self.word)
         self.attempts = Config.MAX_ATTEMPTS
-        self.incorrect_letters = []
+        self.used_letters = set()
+
+    def start_game(self):
         self._greeting()
         self.play()
 
@@ -50,20 +52,23 @@ class Gallows:
         while self.word_state.count("_") > 0 and self.attempts >= 0:
             self._print_info()
             letter = input("Угадай букву которая есть в слове:")
+            self.used_letters.add(letter.lower())
             if self._is_valid_letter(letter):
                 if self._was_letter_used(letter):
-                    print(f'Ты уже вводил "{letter}" и он оказался не правильным, соберись!')
+                    print(
+                        f'Ты уже вводил "{letter}" и он оказался не правильным, соберись!'
+                    )
                 else:
-                    if letter.lower().strip() and letter.lower() in self.word:
+                    if letter.lower() and letter.lower() in self.word:
                         self.process_correct_letter(letter)
                     else:
-                        self.process_incorrect_letter(letter)
+                        self.process_incorrect_letter()
             else:
                 print("Ты ввел не валидный символ(ы), попробуй еще раз!", end="\n\n")
 
     def process_correct_letter(self, letter: str) -> None:
         print("Ты угадал!", end="\n\n")
-        for i, char in enumerate(self.word, start=0):
+        for i, char in enumerate(self.word):
             if char == letter.lower():
                 self.word_state[i] = char
 
@@ -71,18 +76,14 @@ class Gallows:
             self._congratulate()
             return
 
-    def process_incorrect_letter(self, letter: str) -> None:
-        self.incorrect_letters.append(letter.lower())
+    def process_incorrect_letter(self) -> None:
         self.attempts -= 1
-        try:
-            self._draw_gallows()
-        except KeyError:
-            print("К сожалению ты проиграл!")
-            print(f"Я загадал слово: {self.word}")
-            print("Игра закончена!")
-
-    def _draw_gallows(self) -> None:
-        print(GALLOWS_BY_ATTEMPTS[self.attempts], end="\n\n")
+        if self.attempts >= 0:
+            print(GALLOWS_STAGES[self.attempts], end="\n\n")
+            return
+        print("К сожалению ты проиграл!")
+        print(f"Я загадал слово: {self.word}")
+        print("Игра закончена!")
 
     def _congratulate(self) -> None:
         print("Поздравляю! Ты выиграл!", end="\n\n")
@@ -91,7 +92,7 @@ class Gallows:
         return len(value) == 1 and "CYRILLIC" in unicodedata.name(value)
 
     def _was_letter_used(self, letter: str) -> bool:
-        return letter.lower() in self.incorrect_letters
+        return letter.lower() in self.used_letters
 
     def _get_word(self) -> str:
         words_file_path = Config.WORDS_FILE_PATH
@@ -100,9 +101,9 @@ class Gallows:
         return choice(words)
 
     def _print_info(self) -> None:
-        if self.incorrect_letters:
+        if self.used_letters:
             print(
-                f"Неправильные буквы: {', '.join(self.incorrect_letters)}", end="\n\n"
+                f"Неправильные буквы: {', '.join(sorted(self.used_letters))}", end="\n\n"
             )
         print(f"Осталось попыток: {self.attempts + 1}", end="\n\n")
         print("".join(self.word_state), end="\n\n")
