@@ -3,6 +3,9 @@
 """
 
 from gallows import Gallows
+from word_repository import WordRepository
+from engine import GallowEngine
+from console_ui import ConsoleUI
 
 
 
@@ -15,8 +18,11 @@ def main():
     print("Привет! Ты хочешь поиграть в Виселицу?(Введи yes если хочешь)")
     response = input()
     while response.lower() == "yes":
-        app = Gallows()
-        app.start_game()
+        repo = WordRepository()
+        word = repo.get_word()
+        engine = GallowEngine(word)
+        app = ConsoleUI(engine)
+        app.run()
         print("Ты хочешь сыграть еще раз?(Введи yes если хочешь)")
         response = input()
 

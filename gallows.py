@@ -52,13 +52,13 @@ class Gallows:
         while self.word_state.count("_") > 0 and self.attempts >= 0:
             self._print_info()
             letter = input("Угадай букву которая есть в слове:")
-            self.used_letters.add(letter.lower())
             if self._is_valid_letter(letter):
                 if self._was_letter_used(letter):
                     print(
-                        f'Ты уже вводил "{letter}" и он оказался не правильным, соберись!'
+                        f'Ты уже вводил "{letter}", соберись!'
                     )
                 else:
+                    self.used_letters.add(letter.lower())
                     if letter.lower() and letter.lower() in self.word:
                         self.process_correct_letter(letter)
                     else:
