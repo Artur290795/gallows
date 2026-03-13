@@ -28,7 +28,7 @@ class TestGallowEngine:
         engine.guess("к")
         engine.guess("о")
         result = engine.guess("т")
-        
+
         assert result == GuessResult.WIN
         assert engine.word_state == ["к", "о", "т"]
         assert engine.is_game_over
@@ -37,7 +37,7 @@ class TestGallowEngine:
     def test_incorrect_guess(self):
         engine = GallowEngine("кот")
         result = engine.guess("а")
-        
+
         assert result == GuessResult.INCORRECT
         assert engine.attempts == Config.MAX_ATTEMPTS - 1
         assert "а" in engine.used_letters
@@ -61,8 +61,7 @@ class TestGallowEngine:
 
     def test_invalid_input(self):
         engine = GallowEngine("кот")
-    
+
         assert engine.guess("1") == GuessResult.INVALID
         assert engine.guess("ко") == GuessResult.INVALID
         assert engine.guess("") == GuessResult.INVALID
-        
