@@ -2,10 +2,9 @@
 Точка входа в приложение
 """
 
-from gallows import Gallows
-from word_repository import WordRepository
-from engine import GallowEngine
-from console_ui import ConsoleUI
+from app.word_repository import WordRepository
+from app.engine import GallowEngine
+from app.console_ui import ConsoleUI
 
 
 

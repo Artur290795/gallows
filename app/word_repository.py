@@ -16,5 +16,5 @@ class WordRepository:
 
     def get_word(self) -> str:
         with open(Config.WORDS_FILE_PATH, encoding="utf-8") as file:
-            word = [word.strip() for word in file.readlines()]
-        return choice(word)
+            words = [word.strip() for word in file.readlines()]
+        return choice(words)
